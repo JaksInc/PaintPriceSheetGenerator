@@ -61,10 +61,24 @@ def _build_parser() -> argparse.ArgumentParser:
         default=generator.Theme.font_family,
         help="Font family to use",
     )
+    parser.add_argument(
+        "--request-delay",
+        type=float,
+        default=0.0,
+        help="Seconds to wait between HTTP requests",
+    )
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        default=None,
+        help="Directory to cache price data. Caching disabled by default",
+    )
     return parser
 
 
-def _scrape_prices(ids: Iterable[str]) -> List[Dict[str, Any]]:
+def _scrape_prices(
+    ids: Iterable[str], *, delay: float = 0.0, cache_dir: Path | None = None
+) -> List[Dict[str, Any]]:
     """Fetch product information for all *ids*.
 
     Parameters
@@ -82,8 +96,15 @@ def _scrape_prices(ids: Iterable[str]) -> List[Dict[str, Any]]:
 
     items: List[Dict[str, Any]] = []
     session = scraper.requests.Session()  # type: ignore[attr-defined]
+    use_cache = cache_dir is not None
     for pid in ids:
-        info = scraper.fetch_paint_price(pid, session=session)
+        info = scraper.fetch_paint_price(
+            pid,
+            session=session,
+            delay=delay,
+            use_cache=use_cache,
+            cache_dir=cache_dir or scraper.CACHE_DIR,
+        )
         if info:
             items.append(info)
     return items
@@ -111,7 +132,9 @@ def main(argv: Iterable[str] | None = None) -> Path:
     ids = input_loader.load_ids(args.input_file)
 
     logger.info("Scraping prices for %d products", len(ids))
-    items = _scrape_prices(ids)
+    items = _scrape_prices(
+        ids, delay=args.request_delay, cache_dir=args.cache_dir
+    )
 
     theme = generator.Theme(
         header_text=args.header_text,

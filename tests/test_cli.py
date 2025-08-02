@@ -20,7 +20,7 @@ def test_cli_runs_pipeline(tmp_path, monkeypatch):
         {"product_id": "222", "name": "Blue", "price": "$2"},
     ]
 
-    def fake_fetch(pid, session=None):
+    def fake_fetch(pid, session=None, **kwargs):
         return next((i for i in items if i["product_id"] == pid), None)
 
     monkeypatch.setattr(cli.scraper, "fetch_paint_price", fake_fetch)
