@@ -13,6 +13,20 @@ class DummyResponse:
             raise requests.HTTPError()
 
 
+def test_fetch_parses_price(monkeypatch):
+    """HTML responses are parsed for name and price information."""
+
+    html = '<h1>Fancy Paint</h1><div class="price">$9.99</div>'
+    session = requests.Session()
+    # Return a dummy response instead of performing a real HTTP request
+    monkeypatch.setattr(
+        session, "get", lambda url, headers, timeout: DummyResponse(html)
+    )
+
+    info = scraper.fetch_paint_price("sku123", session=session)
+    assert info == {"product_id": "sku123", "name": "Fancy Paint", "price": "$9.99"}
+
+
 def test_fetch_uses_cache(tmp_path, monkeypatch):
     html = '<h1>Paint</h1><div class="price">$5</div>'
     session = requests.Session()

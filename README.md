@@ -34,11 +34,17 @@ PDF.  Additional options allow customising the colours and fonts:
 --font-family NAME        Font family to use
 ```
 
-Run tests with:
+## Testing
+
+The project uses `pytest` for its test suite. After installing the
+dependencies, run the tests with:
 
 ```bash
 pytest
 ```
+
+Continuous integration is configured via GitHub Actions to execute the
+tests on each commit.
 
 Data files can be stored in the `data/` directory.
 
