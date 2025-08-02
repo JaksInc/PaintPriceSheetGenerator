@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import time
 from pathlib import Path
@@ -14,12 +15,18 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://example.com/products/{}"
 HEADERS = {"User-Agent": "PaintPriceSheetGenerator/1.0"}
 
+# Default location used when caching is enabled
+CACHE_DIR = Path(__file__).resolve().parents[1] / "data" / "cache"
+
 
 def fetch_paint_price(
     product_id: str,
     session: Optional[requests.Session] = None,
     retries: int = 3,
     backoff_factor: float = 1.0,
+    delay: float = 0.0,
+    use_cache: bool = False,
+    cache_dir: Path = CACHE_DIR,
 ) -> Optional[Dict[str, str]]:
     """Fetch price and basic details for a paint product.
 
@@ -41,13 +48,33 @@ def fetch_paint_price(
     backoff_factor:
         Initial delay between retries. The delay is doubled after each
         failed attempt.
+    delay:
+        Seconds to wait before each request. This helps to avoid hitting
+        remote rate limits when scraping many products.
+    use_cache:
+        If ``True``, responses are cached on disk and reused for
+        subsequent requests.  The cache is stored under ``cache_dir`` and
+        contains JSON files keyed by product identifier.
+    cache_dir:
+        Directory where cache files are stored when ``use_cache`` is
+        enabled.
     """
 
     sess = session or requests.Session()
     url = BASE_URL.format(product_id)
 
+    if use_cache:
+        cache_file = Path(cache_dir) / f"{product_id}.json"
+        if cache_file.exists():
+            try:
+                return json.loads(cache_file.read_text())
+            except json.JSONDecodeError:
+                logger.warning("Cache file %s is corrupted; refetching", cache_file)
+
     for attempt in range(1, retries + 1):
         try:
+            if delay > 0:
+                time.sleep(delay)
             response = sess.get(url, headers=HEADERS, timeout=10)
             if response.status_code == 429:
                 logger.warning(
@@ -81,10 +108,15 @@ def fetch_paint_price(
         price = price_tag.get_text(strip=True)
         name = name_tag.get_text(strip=True)
 
-        logger.info(
-            "Fetched product %s (%s) at price %s", product_id, name, price
-        )
-        return {"product_id": product_id, "name": name, "price": price}
+        info = {"product_id": product_id, "name": name, "price": price}
+
+        if use_cache:
+            Path(cache_dir).mkdir(parents=True, exist_ok=True)
+            cache_file = Path(cache_dir) / f"{product_id}.json"
+            cache_file.write_text(json.dumps(info))
+
+        logger.info("Fetched product %s (%s) at price %s", product_id, name, price)
+        return info
 
     return None
 
