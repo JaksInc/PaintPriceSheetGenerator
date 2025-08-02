@@ -1,9 +1,13 @@
+import argparse
 import logging
 import time
+from pathlib import Path
 from typing import Dict, Optional
 
 import requests
 from bs4 import BeautifulSoup
+
+from src import input_loader
 
 logger = logging.getLogger(__name__)
 
@@ -83,3 +87,26 @@ def fetch_paint_price(
         return {"product_id": product_id, "name": name, "price": price}
 
     return None
+
+
+def main() -> None:
+    """Command-line interface for fetching paint prices."""
+
+    parser = argparse.ArgumentParser(description="Fetch paint product prices")
+    parser.add_argument(
+        "--input-file",
+        type=Path,
+        default=Path(__file__).with_name("SKUs.json"),
+        help="CSV or JSON file containing paint IDs.",
+    )
+    args = parser.parse_args()
+
+    ids = input_loader.load_ids(args.input_file)
+
+    sess = requests.Session()
+    for pid in ids:
+        fetch_paint_price(pid, session=sess)
+
+
+if __name__ == "__main__":
+    main()
