@@ -1,0 +1,50 @@
+{
+  "interior": {
+    "Premium Plus": {
+      "Flat": "923827",        // BEHR Premium Plus interior flat:contentReference[oaicite:2]{index=2}
+      "Eggshell": "924817",    // Premium Plus interior eggshell:contentReference[oaicite:3]{index=3}
+      "Satin": "926929",       // Premium Plus interior satin:contentReference[oaicite:4]{index=4}
+      "Semigloss": "928046"    // Premium Plus interior semigloss:contentReference[oaicite:5]{index=5}
+    },
+    "Ultra": {
+      "Flat": "1004663292",    // ULTRA interior flat:contentReference[oaicite:6]{index=6}
+      "Eggshell": "433052",    // ULTRA interior eggshell:contentReference[oaicite:7]{index=7}
+      "Satin": "436165",       // ULTRA interior satin:contentReference[oaicite:8]{index=8}
+      "Semigloss": "436061"    // ULTRA interior semigloss:contentReference[oaicite:9]{index=9}
+    },
+    "Marquee": {
+      "Matte": "1000037651",   // MARQUEE interior matte:contentReference[oaicite:10]{index=10}
+      "Eggshell": "1000037695",// MARQUEE interior eggshell:contentReference[oaicite:11]{index=11}
+      "Satin": "1000049033",   // MARQUEE interior satin:contentReference[oaicite:12]{index=12}
+      "Semigloss": "1000037721"// MARQUEE interior semigloss:contentReference[oaicite:13]{index=13}
+    },
+    "Dynasty": {
+      "Matte": "1006019568",   // DYNASTY interior matte:contentReference[oaicite:14]{index=14}
+      "Eggshell": "1006019572",// DYNASTY interior eggshell:contentReference[oaicite:15]{index=15}
+      "Satin": "1007602739",   // DYNASTY interior satin:contentReference[oaicite:16]{index=16}
+      "Semigloss": "1006019577"// DYNASTY interior semigloss:contentReference[oaicite:17]{index=17}
+    }
+  },
+  "exterior": {
+    "Premium Plus": {
+      "Flat": "154121",        // Premium Plus exterior flat:contentReference[oaicite:18]{index=18}
+      "Satin": "352021",       // Premium Plus exterior satin:contentReference[oaicite:19]{index=19}
+      "Semigloss": "153397"    // Premium Plus exterior semigloss:contentReference[oaicite:20]{index=20}
+    },
+    "Ultra": {
+      "Flat": "256585",        // ULTRA exterior flat:contentReference[oaicite:21]{index=21}
+      "Satin": "288118",       // ULTRA exterior satin:contentReference[oaicite:22]{index=22}
+      "Semigloss": "286631"    // ULTRA exterior semigloss:contentReference[oaicite:23]{index=23}
+    },
+    "Marquee": {
+      "Flat": "1000006699",    // MARQUEE exterior flat
+      "Satin": "1000006746",   // MARQUEE exterior satin:contentReference[oaicite:25]{index=25}
+      "Semigloss": "1000006763"// MARQUEE exterior semigloss:contentReference[oaicite:26]{index=26}
+    },
+    "Dynasty": {
+      "Flat": "1009057943",    // DYNASTY exterior flat:contentReference[oaicite:27]{index=27}
+      "Satin": "1009057939",   // DYNASTY exterior satin:contentReference[oaicite:28]{index=28}
+      "Semigloss": "1009057938"// DYNASTY exterior semigloss:contentReference[oaicite:29]{index=29}
+    }
+  }
+}
